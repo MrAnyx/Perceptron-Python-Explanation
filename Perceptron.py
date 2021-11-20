@@ -1,4 +1,5 @@
 import numpy as np
+import math
 
 
 class Perceptron:
@@ -10,9 +11,13 @@ class Perceptron:
         self.bias = 0
         self.nb_feature = len(self.inputs_training[0])
         self.weights = [self.bias] + [0 for i in range(self.nb_feature)]
+        self.activation_function = self.heaviside
 
     def heaviside(self, x):
         return 1 if x >= 0 else 0
+
+    def sigmoid(self, x):
+        return 1 / (1 + math.exp(-x))
 
     def format_input_bias(self, input, value):
         return [value] + input
@@ -27,7 +32,7 @@ class Perceptron:
                 )
 
                 sum_val = np.sum(np.multiply(inputs_tmp, self.weights))
-                output = self.heaviside(sum_val)
+                output = self.activation_function(sum_val)
 
                 for j in range(self.nb_feature + 1):
                     self.weights[j] += (
@@ -40,4 +45,4 @@ class Perceptron:
         inputs_tmp = np.array(self.format_input_bias(input, 1))
 
         sum_val = np.sum(np.multiply(inputs_tmp, self.weights))
-        return self.heaviside(sum_val)
+        return self.activation_function(sum_val)
