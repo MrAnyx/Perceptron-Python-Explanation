@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 from Perceptron import Perceptron
 
 
-# OR operand
+# AND operand
 inputs_training = [[0, 0], [0, 1], [1, 0], [1, 1]]
 outputs_training = [0, 0, 0, 1]
 
