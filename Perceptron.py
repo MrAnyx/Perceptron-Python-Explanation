@@ -1,6 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
 from LossFunction import LossFunction
+import random
 
 
 class Perceptron:
@@ -11,7 +12,7 @@ class Perceptron:
         nb_iter,
         loss_func,
         weights=None,
-    ):
+    ) -> None:
         self.inputs_training = inputs_training
         self.outputs_training = outputs_training
         self.nb_iter = nb_iter
@@ -31,10 +32,10 @@ class Perceptron:
         self.nb_inputs = len(self.inputs_training)
         self.E = []
 
-    def format_input_bias(self, input, value):
+    def format_input_bias(self, input, value) -> list:
         return [value] + input
 
-    def train(self, display_loss=True):
+    def train(self, display_loss=True) -> None:
         for k in range(self.nb_iter):
             output_list = []
             for i in range(self.nb_inputs):
@@ -57,24 +58,31 @@ class Perceptron:
             error = self.compute_error(self.outputs_training, output_list)
             self.E.append(error)
             # if display_loss and k % (self.nb_iter / 100) == 0:
-            if display_loss:
-                print(f"Mean loss of iter {k} : {error}")
+            if display_loss and self._compute_iter_display_error(k):
+                print(f"Pourcentage d'erreur ({k}) : {error} -> {round(error*100, 2)}%")
 
-    def compute_error(self, target, output):
+    def _compute_iter_display_error(self, iter) -> bool:
+
+        if iter % (10 ** (max(0, len(str(self.nb_iter)) - 2))) == 0:
+            return True
+        else:
+            return False
+
+    def compute_error(self, target, output) -> float:
         sum_tmp = 0
         for i in range(self.nb_inputs):
             sum_tmp += (output[i] - target[i]) ** 2
 
         return (1 / self.nb_inputs) * sum_tmp
 
-    def display_mean_squared_loss_graph(self):
+    def display_mean_squared_loss_graph(self) -> None:
         plt.plot(range(self.nb_iter), self.E)
         plt.xlabel("Itération")
         plt.ylabel("Pourcentage d'erreur")
         plt.title(f"Taux d'erreur avec la fonction d'activation {self.loss_func}")
         plt.show()
 
-    def guess(self, input):
+    def guess(self, input) -> float:
         inputs_tmp = np.array(self.format_input_bias(input, 1))
 
         sum_val = np.sum(np.multiply(inputs_tmp, self.weights))
