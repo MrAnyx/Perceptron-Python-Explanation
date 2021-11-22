@@ -69,6 +69,9 @@ class Perceptron:
 
     def display_mean_squared_loss_graph(self):
         plt.plot(range(self.nb_iter), self.E)
+        plt.xlabel("Itération")
+        plt.ylabel("Pourcentage d'erreur")
+        plt.title(f"Taux d'erreur avec la fonction d'activation {self.loss_func}")
         plt.show()
 
     def guess(self, input):
